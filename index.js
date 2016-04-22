@@ -4,20 +4,49 @@
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
+var util = require('util');
+var moment = require('moment');
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
 
 if (!databaseUri) {
-  console.log('DATABASE_URI not specified, falling back to localhost.');
+  databaseUri = 'mongodb://localhost:27017/dev';
+  console.log(util.format('DATABASE_URI not specified, falling back to %s.',  databaseUri));
+}
+else
+{
+  console.log(util.format("DATABASE_URI: %s", databaseUri));
 }
 
+var cloud = process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js';
+console.log(util.format("Cloud: %s", cloud ));
+
+var appId = process.env.APP_ID || 'myAppId';
+console.log(util.format("APP_ID: %s", appId ));
+
+var masterKey = process.env.MASTER_KEY || 'myMasterKey'; //Add your master key here. Keep it secret!
+console.log(util.format("MASTER_KEY: %s", masterKey ));
+
+var serverUrl = process.env.SERVER_URL || 'http://localhost:1337/parse';  // Don't forget to change to https if needed
+console.log(util.format("SERVER_URL: %s", serverUrl ));
+
+var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
+console.log(util.format("JAVASCRIPT_KEY: %s", javascriptKey ));
+
+
 var api = new ParseServer({
-  databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
-  cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
-  appId: process.env.APP_ID || 'myAppId',
-  masterKey: process.env.MASTER_KEY || '', //Add your master key here. Keep it secret!
-  serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
-  javascriptKey: process.env.JAVASCRIPT_KEY || 'myJavascriptKey',
+  databaseURI: databaseUri,
+  cloud: cloud,
+  appId: appId,
+  masterKey: masterKey, 
+  serverURL: serverUrl,
+  javascriptKey: javascriptKey,
+  verifyUserEmails: true,
+  emailAdapter: new SimpleMailgunAdapter(
+    apiKey: '',
+    domain: '',
+    fromAddress: ''
+    ),
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   }
@@ -27,6 +56,24 @@ var api = new ParseServer({
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 var app = express();
+var bodyParser = require('body-parser');
+var multer = require('multer'); // v1.0.5
+var upload = multer(); // for parsing multipart/form-data
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+// Middle-ware to print out request
+app.use(function(req, res, next) {
+  
+
+  console.log(util.format('REQUEST - %s', moment().format("YYYY-MM-DD HH:mm:ss")));
+  console.log(util.format('%s: %s', req.method, req.originalUrl));
+  console.log(util.format('Headers: %j', req.headers));
+  console.log(util.format('Body: %j', req.body));
+
+  next();
+});
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
