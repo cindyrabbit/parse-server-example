@@ -41,12 +41,28 @@ var api = new ParseServer({
   masterKey: masterKey, 
   serverURL: serverUrl,
   javascriptKey: javascriptKey,
+  appName: 'parse-server-example',
+  publicServerURL: 'http://fotonic.co/parse',
   verifyUserEmails: true,
-  emailAdapter: new SimpleMailgunAdapter(
-    apiKey: '',
-    domain: '',
-    fromAddress: ''
-    ),
+  emailAdapter: {
+    module: 'parse-server-mandrill-adapter',
+    options: {
+      // API key from Mandrill account
+      apiKey: '3my2mDn3BN6Lhr_-aaH0jA',
+      // Reply-to email address
+      replyTo: 'contactus@fotonic.co',
+      // Display name
+      displayName: 'contactus@fotonic.co',
+      // Verification email subject
+      verificationSubject: 'Please verify your e-mail for *|appname|*',
+      // Verification email body
+      verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
+      // Password reset email subject
+      passwordResetSubject: 'Password Reset Request for *|appname|*',
+      // Password reset email body
+      passwordResetBody: 'Hi,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*'
+    }
+  },
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   }
