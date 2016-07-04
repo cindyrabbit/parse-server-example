@@ -1,11 +1,12 @@
-// Example express application adding the parse-server module to expose Parse
-// compatible API routes.
-
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 var util = require('util');
 var moment = require('moment');
+var ParseDashboard = require('parse-dashboard');
+var parseServerConfig = require('parse-server-azure-config');
+var url = require('url');
+var config = parseServerConfig(__dirname);
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
 
@@ -32,7 +33,6 @@ console.log(util.format("SERVER_URL: %s", serverUrl ));
 
 var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
 console.log(util.format("JAVASCRIPT_KEY: %s", javascriptKey ));
-
 
 var api = new ParseServer({
   databaseURI: databaseUri,
@@ -84,7 +84,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 // Middle-ware to print out request
 app.use(function(req, res, next) {
   
-
   console.log(util.format('REQUEST - %s', moment().format("YYYY-MM-DD HH:mm:ss")));
   console.log(util.format('%s: %s', req.method, req.originalUrl));
   console.log(util.format('Headers: %j', req.headers));
@@ -93,12 +92,17 @@ app.use(function(req, res, next) {
   next();
 });
 
+
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
+
+app.use('/parse', new ParseServer(config.server));
+
+// app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', function(req, res) {
@@ -112,11 +116,17 @@ app.get('/test', function(req, res) {
 });
 
 var port = process.env.PORT || 1337;
-var httpServer = require('http').createServer(app);
-httpServer.listen(port, function() {
-    console.log('parse-server-example running on port ' + port + '.');
+
+app.listen(process.env.PORT || url.parse(config.server.serverURL).port, function () {
+  console.log(`Parse Server running at ${config.server.serverURL}`);
 });
+// var httpServer = require('http').createServer(app);
+// httpServer.listen(port, function() {
+//     console.log('parse-server-example running on port ' + port + '.');
+// });
 
 // This will enable the Live Query real-time server
 // ParseServer.createLiveQueryServer(httpServer);
+
+
 

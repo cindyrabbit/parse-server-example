@@ -1,150 +1,71 @@
-# parse-server-example
+# Parse Server on Managed Azure Services
 
-Example project using the [parse-server](https://github.com/ParsePlatform/parse-server) module on Express.
+Your parse server is running at `https://<yoursite>.azurewebsites.net/parse`.
 
-Read the full Parse Server guide here: https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide
+Your parse dashboard is running at `https://<yoursite>.azurewebsites.net/parse-dashboard`
+  * username: `<appId>`
+  * password: `<masterKey>`
 
-### For Local Development
+### Developing Remotely
 
-* Make sure you have at least Node 4.3. `node --version`
-* Clone this repo and change directory to it.
-* `npm install`
-* Install mongo locally using http://docs.mongodb.org/master/tutorial/install-mongodb-on-os-x/
-* Run `mongo` to connect to your database, just to make sure it's working. Once you see a mongo prompt, exit with Control-D
-* Run the server with: `npm start`
-* By default it will use a path of /parse for the API routes.  To change this, or use older client SDKs, run `export PARSE_MOUNT=/1` before launching the server.
-* You now have a database named "dev" that contains your Parse data
-* Install ngrok and you can test with devices
+Use Visual Studio Online, a free web app site extension, to modify your deployed site code at `https://<yoursite>.scm.azurewebsites.net/dev`.  You may need to install VSO onto your web app via tools->Visual Studio Online. Filewatching is enabled by default, so any changes that you make to your javascript/configuration files will automatically trigger a site restart to pick up the changes.  Be careful if you deploy to the site as your remote changes may be overwritten!
 
-### Getting Started With Heroku + Mongolab Development
+### Developing Locally
 
-#### With the Heroku Button
+You can easily interact with the deployed parse server code via git.  Clone the web app repository locally with `git clone https://<yoursite>.scm.azurewebsites.net/<yoursite>.git`.  Pushing to the remote repository will automatically trigger a deployment.  Be careful not to overwrite changes that you have made remotely with a git deployment!
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+If you want to setup specific configuration for your app, add it to `config.js` or `local.js`.  `local.js` changes will be ignored from git, so it's a good placed to add secrets while developing locally.
 
-#### Without It
+### Updating Dependencies
 
-* Clone the repo and change directory to it
-* Log in with the [Heroku Toolbelt](https://toolbelt.heroku.com/) and create an app: `heroku create`
-* Use the [MongoLab addon](https://elements.heroku.com/addons/mongolab): `heroku addons:create mongolab:sandbox`
-* By default it will use a path of /parse for the API routes.  To change this, or use older client SDKs, run `heroku config:set PARSE_MOUNT=/1`
-* Deploy it with: `git push heroku master`
+If you want to upgrade to a newer version of parse-server, parse-dashboard, or other modules, you can run `npm install <package>@<version>` from [kudu console](https://blogs.msdn.microsoft.com/benjaminperkins/2014/03/24/using-kudu-with-windows-azure-web-sites/).  We recommend testing these upgrades on a development instance or locally before modifying your production site.  If you want to move to the next major version of parse-server or parse-dashboard you'll need to modify your site package.json, as `^major.minor.patch` versioning only allows installing a package of the same major version.
 
-### Getting Started With AWS Elastic Beanstalk
+To change the version of node or npm used on the web app, modify the `engines` property in package.json.
 
-#### With the Deploy to AWS Button
+### Troubleshooting
 
-<a title="Deploy to AWS" href="https://console.aws.amazon.com/elasticbeanstalk/home?region=us-west-2#/newApplication?applicationName=ParseServer&solutionStackName=Node.js&tierName=WebServer&sourceBundleUrl=https://s3.amazonaws.com/elasticbeanstalk-samples-us-east-1/eb-parse-server-sample/parse-server-example.zip" target="_blank"><img src="http://d0.awsstatic.com/product-marketing/Elastic%20Beanstalk/deploy-to-aws.png" height="40"></a>
+Logging specific parse-server configuration:
+* Verbose parse-server logging: `verbose: 'true'`
+* Database driver logging (very verbose!): add `require('mongodb-core/lib/connection/logger')('dummy', { loggerLevel: 'debug' });` before you initialize parse server
 
-#### Without It
+To see your logs, check:
+* The Logs tab of the parse dashboard
+* Web App [diagnostic logging](https://azure.microsoft.com/en-us/documentation/articles/web-sites-enable-diagnostic-log/)
 
-* Clone the repo and change directory to it
-* Log in with the [AWS Elastic Beanstalk CLI](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html), select a region, and create an app: `eb init`
-* Create an environment and pass in MongoDB URI, App ID, and Master Key: `eb create --envvars DATABASE_URI=<replace with URI>,APP_ID=<replace with Parse app ID>,MASTER_KEY=<replace with Parse master key>`
+Useful tools:
+* F12 developer tools (are the requests to parse server from the dashboard failing?)
+* Postman / Fiddler (execute rest calls against parse server / intercept traffic)
+* node-inspector (debug your app locally or [remotely](https://blogs.msdn.microsoft.com/waws/2016/04/07/debug-node-js-azure-mobile-apps-with-node-inspector/))
 
-### Getting Started With Microsoft Azure App Service
+######Parse Dashboard Issues
+The parse dashboard used to be located in a site extension with route `https://<yoursite>.scm.azurewebsites.net/parse-dashboard`.
+It is now an express app running on the main web site at route `https://<yoursite>.azurewebsites.net/parse-dashboard`.  A username (appId) and password (masterKey) are required.
+The dashboard can take a long time to load due to cold starts.
 
-#### With the Deploy to Azure Button
+######Push Issues
+The notification hub needs to be at least basic tier in order to send push notifications.
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+######DocDB
+There have been known issues with the DocumentDB dropping mongo connections. A server restart will typically fix the problem.  We are working to resolve the problem.
 
-#### Without It
-
-A detailed tutorial is available here:
-[Azure welcomes Parse developers](https://azure.microsoft.com/en-us/blog/azure-welcomes-parse-developers/)
-
-
-### Getting Started With Google App Engine
-
-1. Clone the repo and change directory to it 
-1. Create a project in the [Google Cloud Platform Console](https://console.cloud.google.com/).
-1. [Enable billing](https://console.cloud.google.com/project/_/settings) for your project.
-1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/).
-1. Setup a MongoDB server.  You have a few options:
-  1. Create a Google Compute Engine virtual machine with [MongoDB pre-installed](https://cloud.google.com/launcher/?q=mongodb).
-  1. Use [MongoLab](https://mongolab.com/google/) to create a free MongoDB deployment on Google Cloud Platform.
-1. Modify `app.yaml` to update your environment variables.
-1. Delete `Dockerfile`
-1. Deploy it with `gcloud preview app deploy`
-
-A detailed tutorial is available here:
-[Running Parse server on Google App Engine](https://cloud.google.com/nodejs/resources/frameworks/parse-server)
-
-### Getting Started With Scalingo
-
-#### With the Scalingo button
-
-[![Deploy to Scalingo](https://cdn.scalingo.com/deploy/button.svg)](https://my.scalingo.com/deploy)
-
-#### Without it
-
-* Clone the repo and change directory to it
-* Log in with the [Scalingo CLI](http://cli.scalingo.com/) and create an app: `scalingo create my-parse`
-* Use the [Scalingo MongoDB addon](https://scalingo.com/addons/scalingo-mongodb): `scalingo addons-add scalingo-mongodb free`
-* Setup MongoDB connection string: `scalingo env-set DATABASE_URI='$SCALINGO_MONGO_URL'`
-* By default it will use a path of /parse for the API routes. To change this, or use older client SDKs, run `scalingo env-set PARSE_MOUNT=/1`
-* Deploy it with: `git push scalingo master`
-
-# Using it
-
-Before using it, you can access a test page to verify if the basic setup is working fine [http://localhost:1337/test](http://localhost:1337/test).
-Then you can use the REST API, the JavaScript SDK, and any of our open-source SDKs:
-
-Example request to a server running locally:
-
-```curl
-curl -X POST \
-  -H "X-Parse-Application-Id: myAppId" \
-  -H "Content-Type: application/json" \
-  -d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
-  http://localhost:1337/parse/classes/GameScore
-  
-curl -X POST \
-  -H "X-Parse-Application-Id: myAppId" \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  http://localhost:1337/parse/functions/hello
-```
-
-Example using it via JavaScript:
-
-```javascript
-Parse.initialize('myAppId','unused');
-Parse.serverURL = 'https://whatever.herokuapp.com';
-
-var obj = new Parse.Object('GameScore');
-obj.set('score',1337);
-obj.save().then(function(obj) {
-  console.log(obj.toJSON());
-  var query = new Parse.Query('GameScore');
-  query.get(obj.id).then(function(objAgain) {
-    console.log(objAgain.toJSON());
-  }, function(err) {console.log(err); });
-}, function(err) { console.log(err); });
-```
-
-Example using it on Android:
-```java
-//in your application class
-
-Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-  .applicationId("myAppId")
-  .clientKey("myClientKey")
-  .server("http://myServerUrl/parse/")   // '/' important after 'parse'
-  .build());
-
-ParseObject testObject = new ParseObject("TestObject");
-testObject.put("foo", "bar");
-testObject.saveInBackground();
-```
-Example using it on iOS (Swift):
-```swift
-//in your AppDelegate
-
-Parse.initializeWithConfiguration(ParseClientConfiguration(block: { (configuration: ParseMutableClientConfiguration) -> Void in
-  configuration.server = "https://<# Your Server URL #>/parse/" // '/' important after 'parse'
-  configuration.applicationId = "<# Your APP_ID #>"
-  configuration.clientKey = "<# Your CLIENT_KEY #>"
-}))
-```
-You can change the server URL in all of the open-source SDKs, but we're releasing new builds which provide initialization time configuration of this property.
+### Useful Links
+* App Links
+  * Parse Server: `https://<yoursite>.azurewebsites.net/parse`
+  * Parse Dashboard: `https://<appId>:<masterKey>@<yoursite>.azurewebsites.net/parse-dashboard`
+  * Online Code Editor: `https://<yoursite>.scm.azurewebsites.net/dev`
+  * Web App Git Repository: `https://<yoursite>.scm.azurewebsites.net/<yoursite>.git`
+* Azure Documentation
+  * [Parse Server on Managed Azure Services](https://azure.microsoft.com/en-us/marketplace/partners/microsoft/parseserver/)
+  * [Blog Post](https://azure.microsoft.com/en-us/blog/announcing-the-publication-of-parse-server-with-azure-managed-services/)
+* Github Repositories
+  * [parse-server](https://github.com/ParsePlatform/parse-server)
+  * [parse-dashboard](https://github.com/ParsePlatform/parse-dashboard)
+  * [parse-server-azure-storage](https://github.com/felixrieseberg/parse-server-azure-storage)
+  * [parse-server-azure-push](https://github.com/mamaso/parse-server-azure-push)
+  * [parse-server-azure-config](https://github.com/mamaso/parse-server-azure-config)
+  * [Deployed app](https://github.com/Azure/parse-server-example)
+* Azure Infrastructure
+  * [Web Apps](https://azure.microsoft.com/en-us/documentation/services/app-service/web/)
+  * [DocumentDB](https://azure.microsoft.com/en-us/documentation/services/documentdb/)
+  * [Storage](https://azure.microsoft.com/en-us/documentation/services/storage/)
+  * [Notification Hubs](https://azure.microsoft.com/en-us/documentation/services/notification-hubs/)
