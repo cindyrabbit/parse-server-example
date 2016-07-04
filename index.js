@@ -49,6 +49,8 @@ var api = new ParseServer({
     options: {
       // API key from Mandrill account
       apiKey: '3my2mDn3BN6Lhr_-aaH0jA',
+      // From email address
+      fromEmail: 'contactus@fotonic.co',
       // Reply-to email address
       replyTo: 'contactus@fotonic.co',
       // Display name
