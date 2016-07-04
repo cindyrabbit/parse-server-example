@@ -42,7 +42,7 @@ var api = new ParseServer({
   serverURL: serverUrl,
   javascriptKey: javascriptKey,
   appName: 'parse-server-example',
-  publicServerURL: 'http://fotonic.co/parse',
+  publicServerURL: 'http://parse-server-example5889.azurewebsites.net/parse',
   verifyUserEmails: true,
   emailAdapter: {
     module: 'parse-server-mandrill-adapter',
@@ -116,5 +116,5 @@ httpServer.listen(port, function() {
 });
 
 // This will enable the Live Query real-time server
-ParseServer.createLiveQueryServer(httpServer);
+// ParseServer.createLiveQueryServer(httpServer);
 
