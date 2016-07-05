@@ -11,7 +11,8 @@ var config = parseServerConfig(__dirname);
 var databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
 
 if (!databaseUri) {
-  databaseUri = 'mongodb://localhost:27017/dev';
+  //databaseUri = 'mongodb://localhost:27017/dev';
+  databaseUri = "mongodb://chris:870807@mongodb.westus.cloudapp.azure.com:27017/dev";
   console.log(util.format('DATABASE_URI not specified, falling back to %s.',  databaseUri));
 }
 else
@@ -42,7 +43,7 @@ var api = new ParseServer({
   serverURL: serverUrl,
   javascriptKey: javascriptKey,
   appName: 'parse-server-example',
-  publicServerURL: 'http://parse-server-example5889.azurewebsites.net/parse',
+  publicServerURL: serverUrl,   // Used to send email; keep it the same as serverURL
   verifyUserEmails: true,
   emailAdapter: {
     module: 'parse-server-mandrill-adapter',
@@ -51,18 +52,18 @@ var api = new ParseServer({
       apiKey: '3my2mDn3BN6Lhr_-aaH0jA',
       // From email address
       fromEmail: 'contactus@fotonic.co',
-      // Reply-to email address
-      replyTo: 'contactus@fotonic.co',
       // Display name
       displayName: 'contactus@fotonic.co',
+      // Reply-to email address
+      replyTo: 'contactus@fotonic.co',
       // Verification email subject
       verificationSubject: 'Please verify your e-mail for *|appname|*',
       // Verification email body
-      verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
+      verificationBody: 'Hi *|username|*,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
       // Password reset email subject
       passwordResetSubject: 'Password Reset Request for *|appname|*',
       // Password reset email body
-      passwordResetBody: 'Hi,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*'
+      passwordResetBody: 'Hi *|username|*,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*'
     }
   },
   liveQuery: {
@@ -117,7 +118,7 @@ app.get('/test', function(req, res) {
 
 var port = process.env.PORT || 1337;
 
-app.listen(process.env.PORT || url.parse(config.server.serverURL).port, function () {
+app.listen( port || url.parse(config.server.serverURL).port, function () {
   console.log(`Parse Server running at ${config.server.serverURL}`);
 });
 // var httpServer = require('http').createServer(app);

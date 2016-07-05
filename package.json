@@ -29,5 +29,8 @@
   "engines": {
     "node": "4.3",
     "npm": "3.8.3"
+  },
+  "devDependencies": {
+    "node-inspector": "^0.12.8"
   }
 }
