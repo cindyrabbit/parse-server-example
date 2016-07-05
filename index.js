@@ -101,7 +101,7 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
 
-app.use('/parse', new ParseServer(config.server));
+//app.use('/parse', new ParseServer(config.server));
 
 // app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
 
