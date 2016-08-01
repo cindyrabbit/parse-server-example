@@ -1,84 +1,20 @@
 var express = require('express');
-var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 var util = require('util');
 var moment = require('moment');
+var url = require('url');
+
+var ParseServer = require('parse-server').ParseServer;
 var ParseDashboard = require('parse-dashboard');
 var parseServerConfig = require('parse-server-azure-config');
-var url = require('url');
 var config = parseServerConfig(__dirname);
 
-var databaseUri = process.env.DATABASE_URI || process.env.MONGOLAB_URI;
-
-if (!databaseUri) {
-  //databaseUri = 'mongodb://localhost:27017/dev';
-  databaseUri = "mongodb://chris:870807@mongodb.westus.cloudapp.azure.com:27017/dev";
-  console.log(util.format('DATABASE_URI not specified, falling back to %s.',  databaseUri));
-}
-else
-{
-  console.log(util.format("DATABASE_URI: %s", databaseUri));
-}
-
-var cloud = process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js';
-console.log(util.format("Cloud: %s", cloud ));
-
-var appId = process.env.APP_ID || 'myAppId';
-console.log(util.format("APP_ID: %s", appId ));
-
-var masterKey = process.env.MASTER_KEY || 'myMasterKey'; //Add your master key here. Keep it secret!
-console.log(util.format("MASTER_KEY: %s", masterKey ));
-
-var serverUrl = process.env.SERVER_URL || 'http://localhost:1337/parse';  // Don't forget to change to https if needed
-console.log(util.format("SERVER_URL: %s", serverUrl ));
-
-var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
-console.log(util.format("JAVASCRIPT_KEY: %s", javascriptKey ));
-
-var api = new ParseServer({
-  databaseURI: databaseUri,
-  cloud: cloud,
-  appId: appId,
-  masterKey: masterKey, 
-  serverURL: serverUrl,
-  javascriptKey: javascriptKey,
-  appName: 'parse-server-example',
-  publicServerURL: serverUrl,   // Used to send email; keep it the same as serverURL
-  verifyUserEmails: true,
-  emailAdapter: {
-    module: 'parse-server-mandrill-adapter',
-    options: {
-      // API key from Mandrill account
-      apiKey: '3my2mDn3BN6Lhr_-aaH0jA',
-      // From email address
-      fromEmail: 'contactus@fotonic.co',
-      // Display name
-      displayName: 'contactus@fotonic.co',
-      // Reply-to email address
-      replyTo: 'contactus@fotonic.co',
-      // Verification email subject
-      verificationSubject: 'Please verify your e-mail for *|appname|*',
-      // Verification email body
-      verificationBody: 'Hi *|username|*,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
-      // Password reset email subject
-      passwordResetSubject: 'Password Reset Request for *|appname|*',
-      // Password reset email body
-      passwordResetBody: 'Hi *|username|*,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*'
-    }
-  },
-  liveQuery: {
-    classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
-  }
-});
-// Client-keys like the javascript key or the .NET key are not necessary with parse-server
-// If you wish you require them, you can set them as options in the initialization above:
-// javascriptKey, restAPIKey, dotNetKey, clientKey
-
 var app = express();
-var bodyParser = require('body-parser');
-var multer = require('multer'); // v1.0.5
-var upload = multer(); // for parsing multipart/form-data
+app.use('/parse', new ParseServer(config.server));
+app.use('/public', express.static(path.join(__dirname, '/public')));
+app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
 
+var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -92,18 +28,6 @@ app.use(function(req, res, next) {
 
   next();
 });
-
-
-// Serve static assets from the /public folder
-app.use('/public', express.static(path.join(__dirname, '/public')));
-
-// Serve the Parse API on the /parse URL prefix
-var mountPath = process.env.PARSE_MOUNT || '/parse';
-app.use(mountPath, api);
-
-//app.use('/parse', new ParseServer(config.server));
-
-// app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', function(req, res) {
@@ -121,10 +45,6 @@ var port = process.env.PORT || 1337;
 app.listen( port || url.parse(config.server.serverURL).port, function () {
   console.log(`Parse Server running at ${config.server.serverURL}`);
 });
-// var httpServer = require('http').createServer(app);
-// httpServer.listen(port, function() {
-//     console.log('parse-server-example running on port ' + port + '.');
-// });
 
 // This will enable the Live Query real-time server
 // ParseServer.createLiveQueryServer(httpServer);
