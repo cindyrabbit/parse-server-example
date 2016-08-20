@@ -13,6 +13,7 @@ var app = express();
 app.use('/parse', new ParseServer(config.server));
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
+app.set('view engine', 'ejs');
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
@@ -39,6 +40,9 @@ app.get('/', function(req, res) {
 app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
+
+app.get('/email/confirmemail', function(req,res){ res.sendFile(path.join(__dirname, '/public/assets/emailTemplates/comfirmEmail.html')); });
+app.get('/email/welcome', function(req,res){ res.sendFile(path.join(__dirname, '/public/assets/emailTemplates/welcome.html')); });
 
 var port = process.env.PORT || 1337;
 

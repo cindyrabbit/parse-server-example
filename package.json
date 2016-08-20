@@ -11,13 +11,14 @@
   "dependencies": {
     "body-parser": "^1.15.0",
     "connect-flash": "^0.1.1",
+    "ejs": "^2.5.1",
     "express": "^4.13.4",
     "kerberos": "~0.0.x",
     "moment": "^2.13.0",
     "multer": "^1.1.0",
     "npm-shrinkwrap": "^200.5.1",
     "parse": "~1.8.0",
-    "parse-dashboard": "^1.0.14",
+    "parse-dashboard": "^1.0.15",
     "parse-server": "^2.2.8",
     "parse-server-azure-config": "^1.0.0",
     "parse-server-mandrill-adapter": "^1.1.1"
