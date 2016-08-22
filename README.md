@@ -69,3 +69,11 @@ There have been known issues with the DocumentDB dropping mongo connections. A s
   * [DocumentDB](https://azure.microsoft.com/en-us/documentation/services/documentdb/)
   * [Storage](https://azure.microsoft.com/en-us/documentation/services/storage/)
   * [Notification Hubs](https://azure.microsoft.com/en-us/documentation/services/notification-hubs/)
+
+
+### node_modules
+
+Below are modules manually modified and git tracked
+node_modules/parse-server-mandrill-adapter/index.js 
+
+

@@ -9,15 +9,26 @@ var ParseDashboard = require('parse-dashboard');
 var parseServerConfig = require('parse-server-azure-config');
 var config = parseServerConfig(__dirname);
 
+// Global variables need to be defined before app initialization to be ready for other modules
+// global.appRoot = __dirname;
+
 var app = express();
 app.use('/parse', new ParseServer(config.server));
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/parse-dashboard', ParseDashboard(config.dashboard, true));
 app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname+'/public/assets/'));
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+// Determine environment by checking Website_site_name which is a default setting on Azure web app
+if(process.env.WEBSITE_SITE_NAME)
+{
+  process.env.NODE_ENV = "production"; // default value is "development"
+}
 
 // Middle-ware to print out request
 app.use(function(req, res, next) {
@@ -41,8 +52,12 @@ app.get('/test', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
 
-app.get('/email/confirmemail', function(req,res){ res.sendFile(path.join(__dirname, '/public/assets/emailTemplates/comfirmEmail.html')); });
-app.get('/email/welcome', function(req,res){ res.sendFile(path.join(__dirname, '/public/assets/emailTemplates/welcome.html')); });
+// Test pages in Lab environment
+if(process.env.NODE_ENV != "production")
+{
+  app.get('/email/view/confirmemail', function(req,res){ res.render('emailTemplates/confirmEmail'); });
+  app.get('/email/view/welcome', function(req,res){ res.render('emailTemplates/welcome')});
+}
 
 var port = process.env.PORT || 1337;
 
