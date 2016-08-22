@@ -76,4 +76,9 @@ There have been known issues with the DocumentDB dropping mongo connections. A s
 Below are modules manually modified and git tracked
 node_modules/parse-server-mandrill-adapter/index.js 
 
-
+## App Settings
+APP_ID: myAppId
+MASTER_KEY: myMasterKey
+DATABASE_URI: mongodb://chris:870807@mongodb.westus.cloudapp.azure.com:27017/dev
+JAVASCRIPT_KEY: myJavascriptKey
+SERVER_URL: http://lvhunba-parse-eastasia.azurewebsites.net

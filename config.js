@@ -10,11 +10,10 @@ var serverUrl = process.env.SERVER_URL || 'http://localhost:1337';
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
 var emailDir = appRoot + '/views/emailTemplates';
-console.log("emailDir is " + emailDir);
 var verificationBody = fs.readFileSync(emailDir + '/confirmEmail.ejs', 'utf8');
 var passwordResetBody = fs.readFileSync(emailDir + '/resetPassword.ejs', 'utf8');
 
-// console.log(verificationBody);
+var domain_url = 'http://www.lvhunba.com';
 
 //appId, masterKey, databaseURI, serverURI, cloud and logFolder are defined in parse-server-azure-config package reading from machine Environment or default value. 
 
@@ -39,12 +38,12 @@ module.exports = {
 	      // Display name
 	      displayName: '旅婚吧',
 	      company: 'Nextstop Inc',
-	      link_website: 'http://www.lvhunba.com',
-	      link_emai: 'contactus@fotonic.co',
+	      link_website: domain_url,
+	      link_email: 'contactus@fotonic.co',
 	      link_wechat: '',
-	      link_weibo: '',
-	      icon_weibo: 'http://127.0.0.1:1338/images/outline_color_weibo_48.png',
-	      icon_wechat: 'http://127.0.0.1:1338/images/outline_color_wechat_48.png',
+	      link_weibo: 'http://weibo.com/6008920011',
+	      icon_weibo: domain_url + '/img/icons/weibo/outline_color_weibo_48.png',
+	      icon_wechat: domain_url + '/img/icons/wechat/outline_color_wechat_48.png',
 	      // Verification email subject
 	      verificationSubject: '*|appname|* - 请确认您的邮箱',
 	      // Verification email body
@@ -54,7 +53,7 @@ module.exports = {
 	      // Password reset email subject
 	      passwordResetSubject: '*|appname|* - 密码重置',
 	      // Password reset email body
-	      passwordResetBody: 'Hi,\n\nYou requested a password reset for *|appname|*.\n\nClick here to reset it:\n*|link|*'
+	      passwordResetBody: passwordResetBody
 	    }
 	  },
 	  liveQuery: {
