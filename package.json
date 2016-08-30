@@ -21,8 +21,9 @@
     "npm-shrinkwrap": "^200.5.1",
     "parse": "~1.8.0",
     "parse-dashboard": "^1.0.15",
-    "parse-server": "^2.2.8",
+    "parse-server": "^2.2.18",
     "parse-server-azure-config": "^1.0.0",
+    "parse-server-azure-storage": "^1.1.0",
     "parse-server-mandrill-adapter": "^1.1.1",
     "xtend": "^4.0.1"
   },
@@ -35,6 +36,12 @@
     "npm": "3.8.3"
   },
   "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-node-inspector": "^0.4.2",
+    "grunt-nodemon": "^0.4.2",
+    "grunt-shell-spawn": "^0.3.10",
     "node-inspector": "^0.12.8"
   }
 }
