@@ -31,6 +31,4 @@ node_modules
 *~
 
 local.js
-# Local script
-# startDev.sh
-
+.rebooted
