@@ -1,10 +1,12 @@
-var mandrill = require('mandrill-api/mandrill');
-var config = require('../../config.js');
+var appRoot = require('app-root-path');
 var utils = require('./utils.js');
+const main = require(appRoot + '/index.js');
+var config = require( appRoot + main.env.config);
+
+var mandrill = require('mandrill-api/mandrill');
 var fs = require('fs');
 var moment = require('moment');
 var extend = require('xtend');
-var appRoot = require('app-root-path');
 
 var mandrill_client = new mandrill.Mandrill(config.server.emailAdapter.options.apiKey);
 var emailDir = appRoot + '/views/emailTemplates';

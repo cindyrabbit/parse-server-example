@@ -7,10 +7,34 @@ var url = require('url');
 var ParseServer = require('parse-server').ParseServer;
 var ParseDashboard = require('parse-dashboard');
 var parseServerConfig = require('parse-server-azure-config');
-var config = parseServerConfig(__dirname);
+
+const Environment = {
+  'Dev': { 'config': '/config/dev.js'},
+  'Production': {'config': '/config/production.js'}
+};
+
+var env = Environment.Dev;
+
+// Determine environment by checking Website_site_name which is a default setting on Azure web app
+if(process.env.WEBSITE_SITE_NAME)
+{
+  env = Environment.Production;
+}
+
+if(process.env.WEBSITE_SITE_NAME)
+{
+  process.env.NODE_ENV = "production"; // default value is "development"
+}
+
+
+module.exports = {
+  'env': env
+};
+
+var config = parseServerConfig(__dirname, { 'config': env.config } );
 
 // Global variables need to be defined before app initialization to be ready for other modules
-// global.appRoot = __dirname;
+// global.appRoot = __dirname; 
 
 var app = express();
 app.use('/parse', new ParseServer(config.server));
@@ -24,22 +48,18 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-// Determine environment by checking Website_site_name which is a default setting on Azure web app
-if(process.env.WEBSITE_SITE_NAME)
-{
-  process.env.NODE_ENV = "production"; // default value is "development"
-}
 
-// Middle-ware to print out request
-app.use(function(req, res, next) {
+
+// Middle-ware to print out request. This can be turn by export VERBOSE=true
+// app.use(function(req, res, next) {
   
-  console.log(util.format('REQUEST - %s', moment().format("YYYY-MM-DD HH:mm:ss")));
-  console.log(util.format('%s: %s', req.method, req.originalUrl));
-  console.log(util.format('Headers: %j', req.headers));
-  console.log(util.format('Body: %j', req.body));
+//   console.log(util.format('REQUEST - %s', moment().format("YYYY-MM-DD HH:mm:ss")));
+//   console.log(util.format('%s: %s', req.method, req.originalUrl));
+//   console.log(util.format('Headers: %j', req.headers));
+//   console.log(util.format('Body: %j', req.body));
 
-  next();
-});
+//   next();
+// });
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', function(req, res) {
@@ -59,14 +79,9 @@ if(process.env.NODE_ENV != "production")
   app.get('/email/view/welcome', function(req,res){ res.render('emailTemplates/welcome')});
 }
 
-var port = process.env.PORT || 1337;
-
-app.listen( port || url.parse(config.server.serverURL).port, function () {
+app.listen( process.env.PORT || url.parse(config.server.serverURL).port, function () {
   console.log(`Parse Server running at ${config.server.serverURL}`);
 });
 
 // This will enable the Live Query real-time server
 // ParseServer.createLiveQueryServer(httpServer);
-
-
-
