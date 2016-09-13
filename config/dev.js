@@ -39,8 +39,6 @@ module.exports = {
 	      fromEmail: 'contactus@fotonic.co',
 	      // Reply-to email address
 	      replyTo: 'contactus@fotonic.co',
-	      // Display name
-	      displayName: '旅婚吧',
 	      company: 'Nextstop Inc',
 	      link_website: domain_url,
 	      link_email: 'contactus@fotonic.co',
@@ -59,6 +57,12 @@ module.exports = {
 	      // Password reset email body
 	      passwordResetBody: passwordResetBody
 	    }
+	  },
+	   customPages: {
+	    // invalidLink: 'http://yourpage/link_invalid.html',
+	    verifyEmailSuccess: domain_url + '/email-verified'
+	    // choosePassword: 'http://yourpage/new_password.html',
+	    // passwordResetSuccess: 'http://yourpage/sucess.html'
 	  },
 	  liveQuery: {
 	    classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
