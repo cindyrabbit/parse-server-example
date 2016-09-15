@@ -23,8 +23,7 @@ if(process.env.WEBSITE_SITE_NAME == 'lvhunba-parse-dogfood')
 {
   process.env.NODE_ENV = "dogfood";
 }
-
-if(process.env.WEBSITE_SITE_NAME == 'lvhunba-parse-eastasia')
+else if(process.env.WEBSITE_SITE_NAME == 'lvhunba-parse-eastasia')
 {
   process.env.NODE_ENV = "production"; // default value is 'dev'
 }
