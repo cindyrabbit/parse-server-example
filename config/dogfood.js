@@ -9,12 +9,10 @@ var dogfood = {
 	server: {
 		serverURL: serverUrl,
 		publicServerURL: serverUrl + '/parse',
-		databaseURI: 'mongodb://chris:870807@lvhunba-mongdb.eastasia.cloudapp.azure.com:27017/dev'
+		databaseURI: 'mongodb://chris:870807@lvhunba-mongdb.eastasia.cloudapp.azure.com:27017/dogfood'
 	}
 };
 
 // Deep extend dev with dogfood config.
 utils.extendDeep(dev, dogfood);
-console.log("*** inspecting");
-console.log(util.inspect(dev));
 module.exports = dev;
