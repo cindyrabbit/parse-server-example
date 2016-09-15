@@ -11,9 +11,23 @@ var dogfood = {
 		serverURL: serverUrl,
 		publicServerURL: serverUrl + '/parse',
 		databaseURI: databaseUri
+	},
+	dashboard:{
+	    apps: [
+	      {
+	        serverURL: serverUrl + '/parse',
+	        appId: 'myAppId',
+          	masterKey: 'myMasterKey',
+          	appName: 'Lvhunba Parse Server'
+	      }
+	    ]
 	}
 };
 
 // Deep extend dev with dogfood config.
 utils.extendDeep(dev, dogfood);
+
+console.log("Inspecting ***********");
+console.log(util.inspect(dev));
+
 module.exports = dev;
