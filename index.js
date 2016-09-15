@@ -8,30 +8,32 @@ var ParseServer = require('parse-server').ParseServer;
 var ParseDashboard = require('parse-dashboard');
 var parseServerConfig = require('parse-server-azure-config');
 
-const Environment = {
-  'Dev': { 'config': '/config/dev.js'},
-  'Production': {'config': '/config/production.js'}
+const configSettings = {
+  'dev': '/config/dev.js',
+  'dogfood': '/config/dogfood.js',
+  'production': '/config/production.js'
 };
 
-var env = Environment.Dev;
+process.env.NODE_ENV = 'dev';
 
+console.log(util.format("process.env.WEBSITE_SITE_NAME is %s", process.env.WEBSITE_SITE_NAME));
 // Determine environment by checking Website_site_name which is a default setting on Azure web app
-if(process.env.WEBSITE_SITE_NAME)
+if(process.env.WEBSITE_SITE_NAME == '')
 {
-  env = Environment.Production;
+  process.env.NODE_ENV = "dogfood";
 }
 
-if(process.env.WEBSITE_SITE_NAME)
+if(process.env.WEBSITE_SITE_NAME == '')
 {
   process.env.NODE_ENV = "production"; // default value is "development"
 }
 
-
 module.exports = {
-  'env': env
+  'configSettings': configSettings
 };
 
-var config = parseServerConfig(__dirname, { 'config': env.config } );
+var config = parseServerConfig(__dirname, { 'config': configSettings[process.env.NODE_ENV] } );
+console.log("config file location is " + configSettings[process.env.NODE_ENV]);
 
 // Global variables need to be defined before app initialization to be ready for other modules
 // global.appRoot = __dirname; 

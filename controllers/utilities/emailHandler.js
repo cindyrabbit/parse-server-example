@@ -1,8 +1,7 @@
 var appRoot = require('app-root-path');
 var utils = require('./utils.js');
-const main = require(appRoot + '/index.js');
-var config = require( appRoot + main.env.config);
-
+var main = require(appRoot + '/index.js');
+var config = require( appRoot + main.configSettings[process.env.NODE_ENV]);
 var mandrill = require('mandrill-api/mandrill');
 var fs = require('fs');
 var moment = require('moment');

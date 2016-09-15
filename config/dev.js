@@ -1,7 +1,8 @@
-const fs = require('fs');
-const appRoot = require('app-root-path');
-const util = require('util');
-const _GridStoreAdapter = require(appRoot + '/node_modules/parse-server/lib/Adapters/Files/GridStoreAdapter.js');
+var fs = require('fs'),
+	appRoot = require('app-root-path'),
+	dev = require('./dev.js'),
+	util = require('util'),
+	_GridStoreAdapter = require(appRoot + '/node_modules/parse-server/lib/Adapters/Files/GridStoreAdapter.js');
 
 // serverUrl should not contain surfix like /parse
 // Don't forget to change to https if needed
@@ -24,6 +25,7 @@ module.exports = {
   server: {
 	  javascriptKey: javascriptKey,
 	  appName: '旅婚吧',
+	  serverURL: serverUrl,
 	  publicServerURL: serverUrl + '/parse',
 	  allowClientClassCreation: false,
 	  enableAnonymousUsers: false,
