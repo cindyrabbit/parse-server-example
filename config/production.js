@@ -32,7 +32,7 @@ var production = {
 };
 
 // Remove fileAdapter overwritting from dev and use default settings in parse-server-azure-config
-delete dev.server['fileAdapter'];
+delete dev.server['filesAdapter'];
 
 // Deep extend dev with dogfood config.
 utils.extendDeep(dev, production);

@@ -21,8 +21,18 @@ var dogfood = {
           	appName: 'Lvhunba Parse Server'
 	      }
 	    ]
+	},
+	storage:
+	{
+		name: 'lvhunba',
+		container: 'pic-public',
+		accessKey: 'vT1ENNWXv8hKXwcWlSlKG45620k5a/J1MjGJr5JtWq8bAsfZyI4S09dhHjzzYZen8co/duAc/3ndvHrSUzyyqw==',
+		directAccess: true
 	}
 };
+
+// Remove fileAdapter overwritting from dev and use default settings in parse-server-azure-config
+delete dev.server['filesAdapter'];
 
 // Deep extend dev with dogfood config.
 utils.extendDeep(dev, dogfood);
