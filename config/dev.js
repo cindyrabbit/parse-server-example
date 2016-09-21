@@ -6,7 +6,7 @@ var fs = require('fs'),
 
 // serverUrl should not contain surfix like /parse
 // Don't forget to change to https if needed
-var serverUrl = process.env.SERVER_URL || 'http://localhost:1338'; 
+var serverUrl = process.env.SERVER_URL || 'http://localhost:1338/parse';
 
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
@@ -26,7 +26,11 @@ module.exports = {
 	  javascriptKey: javascriptKey,
 	  appName: '旅婚吧',
 	  serverURL: serverUrl,
-	  publicServerURL: serverUrl + '/parse',
+
+	    // The public URL of your app.
+  		// This will appear in the link that is used to verify email addresses and reset passwords.
+		// Set the mount path as it is in serverURL
+	  publicServerURL: serverUrl,
 	  allowClientClassCreation: false,
 	  enableAnonymousUsers: false,
 	  databaseURI: databaseURI,

@@ -54,3 +54,27 @@ Parse.Cloud.define('sendEmailConfirmation', function(req,res){
 		res.error(err);
 	});
 });
+
+var ParseUser = Parse.Object.extend("User");
+Parse.Cloud.beforeSave(Parse.User, function(request, response){
+
+	var user = request.object;
+
+	if(user.get("photographer") && user.get('photographer').customUrl)
+	{
+		var query = new Parse.Query(ParseUser);
+		query.equalTo("photographer.customUrl", user.get('photographer').customUrl);
+
+		query.first().then(function(result){
+			if(result && result.id != user.id){
+				response.error({ code: 137, message: "CustomUrl already exists"});
+			}
+			else
+			{
+				response.success();
+			}
+		}, function(error){
+			response.error("Failed to query customUrl from all photographers.");
+		});
+	};
+});
