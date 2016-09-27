@@ -67,14 +67,18 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response){
 
 		query.first().then(function(result){
 			if(result && result.id != user.id){
-				response.error({ code: 137, message: "CustomUrl already exists"});
+				return response.error({ code: 137, message: "CustomUrl already exists"});
 			}
 			else
 			{
-				response.success();
+				return response.success();
 			}
 		}, function(error){
-			response.error("Failed to query customUrl from all photographers.");
+			return response.error("Failed to query customUrl from all photographers.");
 		});
-	};
+	}
+	else
+	{
+		return response.success();
+	}
 });
