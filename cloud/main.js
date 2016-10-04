@@ -1,6 +1,7 @@
 var emailHandler = require(__dirname + '/../controllers/utilities/emailHandler.js');
 var appRoot = require('app-root-path');
 var utils = require(appRoot + '/controllers/utilities/utils.js');
+var ParseUser = Parse.Object.extend("User");
 
 /*********************
 curl -X POST   \
@@ -55,11 +56,11 @@ Parse.Cloud.define('sendEmailConfirmation', function(req,res){
 	});
 });
 
-var ParseUser = Parse.Object.extend("User");
 Parse.Cloud.beforeSave(Parse.User, function(request, response){
 
 	var user = request.object;
 
+	// Make sure customUrl for each photographer is unique
 	if(user.get("photographer") && user.get('photographer').customUrl)
 	{
 		var query = new Parse.Query(ParseUser);

@@ -42,13 +42,13 @@ module.exports = {
 	      // API key from Mandrill account
 	      apiKey: '3my2mDn3BN6Lhr_-aaH0jA',
 	      // From email address
-	      fromEmail: 'contactus@fotonic.co',
+	      fromEmail: 'hi@fotonic.co',
 	      // Reply-to email address
-	      replyTo: 'contactus@fotonic.co',
+	      replyTo: 'hi@fotonic.co',
 	      company: 'Nextstop Inc',
 	      link_website: domain_url,
-	      link_email: 'contactus@fotonic.co',
-	      link_wechat: '',
+	      link_email: 'hi@fotonic.co',
+	      link_wechat: 'http://mp.weixin.qq.com/s?__biz=MzI4MzM4MTAzMA==&mid=2247483662&idx=1&sn=452e2980ca38bbe0cafd18e5b7c695ee&chksm=eb8add47dcfd5451f6aac1d579017e600f91e709b83ff7829eedcb4469de7bb8d4312d4db328&mpshare=1&scene=2&srcid=1004FUEW1wVYksNhYDApDult&from=timeline&isappinstalled=0#wechat_redirect',
 	      link_weibo: 'http://weibo.com/6008920011',
 	      icon_weibo: domain_url + '/img/icons/weibo/outline_color_weibo_48.png',
 	      icon_wechat: domain_url + '/img/icons/wechat/outline_color_wechat_48.png',
