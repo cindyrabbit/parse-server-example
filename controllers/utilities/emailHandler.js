@@ -100,9 +100,9 @@ function scheduleEmail(options){
 
 	utils.logDebug("scheduleEmail", "Entering ...");
 
-	if(!utils.isValidEmail(options.email))
+	if(!utils.isValidEmail(options.to.email))
 	{
-		utils.logError("scheduleEmail", "Email '%s' is not valid. ", options.email);
+		utils.logError("scheduleEmail", "Email '%s' is not valid. ", options.to.email);
 		return Parse.Promise.error("Email address is not valid");
 	}
 
@@ -110,7 +110,7 @@ function scheduleEmail(options){
 
 	var message = {
     "html": options.message,
-    // "text": "Example text content",
+    "text": options.text,
     "subject": options.subject,
     "from_email": options.from_email,
     "from_name": options.from_name,
@@ -225,5 +225,6 @@ mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip
 
 module.exports= {
 	sendWelcomeEmail: sendWelcomeEmail,
-	sendEmailConfirmation: sendEmailConfirmation
+	sendEmailConfirmation: sendEmailConfirmation,
+	scheduleEmail: scheduleEmail
 };
