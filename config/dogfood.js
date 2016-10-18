@@ -4,7 +4,7 @@ var appRoot = require('app-root-path'),
 	utils = require(appRoot + '/controllers/utilities/utils.js' );
 
 var serverUrl = process.env.SERVER_URL || 'https://lvhunba-parse-dogfood.azurewebsites.net/parse';
-var databaseUri = process.env.DATABASE_URI || 'mongodb://chris:870807@lvhunba-mongdb.eastasia.cloudapp.azure.com:27017/dogfood';
+var databaseUri = process.env.DATABASE_URI || 'mongodb://chris:870807@lvhunba-db.japanwest.cloudapp.azure.com:27017/dogfood';
 
 var dogfood = {
 	server: {
