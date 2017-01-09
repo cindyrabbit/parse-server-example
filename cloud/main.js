@@ -18,6 +18,12 @@ Parse.Cloud.define('hello', function(req, res) {
 
 Parse.Cloud.define('sendBookEmail', function(req,res){
 
+	// Check request integrity before proceed
+	if(!req.params.photographer || !req.params.name || (!req.params.phone && !req.params.wechat) )
+	{
+		return;
+	}
+
 	// Check allowed parameters here
 	var options = {
 		"to": {
