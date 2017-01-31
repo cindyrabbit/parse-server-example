@@ -19,20 +19,23 @@ Parse.Cloud.define('hello', function(req, res) {
 Parse.Cloud.define('sendBookEmail', function(req,res){
 
 	// Check request integrity before proceed
-	if(!req.params.photographer || !req.params.name || (!req.params.phone && !req.params.wechat) )
+	if(!req.params.name || (!req.params.phone && !req.params.wechat) )
 	{
 		return;
 	}
 
 	// Check allowed parameters here
 	var options = {
-		"to": {
+		"to": [{
             "email": '3129125775@txt.att.net',
             "type": "to"
-        },
+        },{
+            "email": 'lvhunba@foxmail.com',
+            "type": "to"
+        }],
         "from_email": 'hi@fotonic.co',
 		'subject': 'Booking',
-		'text': util.format("%s booked %s at %s. Wechat: %s, phone: %s", req.params.name, req.params.photographer, moment().format("MM-DD HH:mm:ss"), req.params.wechat, req.params.phone)
+		'text': util.format("%s booked at %s. Wechat: %s, phone: %s, message: %s", req.params.name, moment().format("MM-DD HH:mm:ss"), req.params.wechat, req.params.phone, req.params.message)
 	}
 
 	emailHandler.scheduleEmail(options).then(function(result){

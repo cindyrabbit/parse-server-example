@@ -37,10 +37,10 @@ function sendWelcomeEmail(params){
 				'email': params.email,
 				'message': data,
 				'subject': "*|appname|* - 欢迎加入旅婚吧",
-				'to':{ 
+				'to':[{ 
 					'email': params.email,
 					'name': params.username
-				},
+				}],
 				'tags': ['welcome']
 			};
 
@@ -74,10 +74,10 @@ function sendEmailConfirmation(params){
 				'email': params.email,
 				'message': data,
 				'subject': "*|appname|* - 请确认您的邮箱",
-				'to':{ 
+				'to': [{ 
 					'email': params.email,
 					'name': params.username
-				},
+				}],
 				'tags': ['emailconfirmation']
 			};
 
@@ -100,10 +100,15 @@ function scheduleEmail(options){
 
 	utils.logDebug("scheduleEmail", "Entering ...");
 
-	if(!utils.isValidEmail(options.to.email))
+	for(var i in options.to)
 	{
-		utils.logError("scheduleEmail", "Email '%s' is not valid. ", options.to.email);
-		return Parse.Promise.error("Email address is not valid");
+		var emailAddress = options.to[i].email;
+		utils.logDebug("scheduleEmail", "Examing email %s", emailAddress);
+		if(!utils.isValidEmail(emailAddress))
+		{
+			utils.logError("scheduleEmail", "Email '%s' is not valid. ", emailAddress);
+			return Parse.Promise.error("Email address is not valid");
+		}
 	}
 
 	var promise = new Parse.Promise();
@@ -114,11 +119,7 @@ function scheduleEmail(options){
     "subject": options.subject,
     "from_email": options.from_email,
     "from_name": options.from_name,
-    "to": [{
-            "email": options.to.email,
-            "name": options.to.name,
-            "type": "to"
-        }],
+    "to": options.to,
     "headers": {
         "Reply-To": options.from_email
     },
