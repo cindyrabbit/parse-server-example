@@ -18,11 +18,15 @@ Parse.Cloud.define('hello', function(req, res) {
 
 Parse.Cloud.define('sendBookEmail', function(req,res){
 
-	// Check request integrity before proceed
-	if(!req.params.name || (!req.params.phone && !req.params.wechat) )
-	{
-		return;
-	}
+	// Exit if phone number is not a valid China's number and wechat is not present
+	var phone_number = req.params.phone;
+	var isMobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
+    var isPhone = /^(?:(?:0\d{2,3})-)?(?:\d{7,8})(-(?:\d{3,}))?$/;
+
+    if( !(phone_number.match(isMobile) || phone_number.match(isPhone)) && !req.params.wechat)
+    {
+    	return res.error("Invalid input.");
+    }
 
 	// Check allowed parameters here
 	var options = {
@@ -39,9 +43,9 @@ Parse.Cloud.define('sendBookEmail', function(req,res){
 	}
 
 	emailHandler.scheduleEmail(options).then(function(result){
-  		res.success(result);
+  		return res.success(result);
 	}, function(err){
-		res.error(err);
+		return res.error(err);
 	});
 });
 
