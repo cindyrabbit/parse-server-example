@@ -37,7 +37,7 @@
     "npm": "3.8.3"
   },
   "devDependencies": {
-    "grunt": "https://registry.npmjs.org/grunt/-/grunt-1.0.1.tgz",
+    "grunt": "^1.0.1",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-node-inspector": "^0.4.2",
