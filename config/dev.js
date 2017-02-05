@@ -12,7 +12,7 @@ var serverUrl = process.env.SERVER_URL || 'http://localhost:1338/parse';
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
-var databaseURI = process.env.DATABASE_URI || 'mongodb://chris:870807@localhost:27017/dev';
+var databaseURI = process.env.DATABASE_URI || 'mongodb://yunjiao:031889@localhost:27017/dev';
 var emailDir = appRoot + '/views/emailTemplates';
 var verificationBody = fs.readFileSync(emailDir + '/confirmEmail.ejs', 'utf8');
 var passwordResetBody = fs.readFileSync(emailDir + '/resetPassword.ejs', 'utf8');
