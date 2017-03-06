@@ -4,7 +4,7 @@ var appRoot = require('app-root-path'),
 	utils = require(appRoot + '/controllers/utilities/utils.js' );
 
 var serverUrl = process.env.SERVER_URL || 'https://lvhunba-parse-eastasia.azurewebsites.net/parse';
-var databaseUri = process.env.DATABASE_URI || 'mongodb://nextbride:JhHpRwiVFeXb3ecFLaeDKveokw3TcEga9kto69gwp3aFtnwMLqxZaky9iapbDcONQol0V1znx2V3RYtiI6HLNg==@nextbride.documents.azure.com:10250/prod?ssl=true';
+var databaseUri = process.env.DATABASE_URI || 'mongodb://chris:870807@lvhunba-db.japanwest.cloudapp.azure.com:27017/prod';
 
 var production = {
 	server: {
