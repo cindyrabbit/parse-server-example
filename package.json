@@ -19,6 +19,7 @@
     "mandrill-api": "^1.0.45",
     "moment": "^2.13.0",
     "multer": "^1.1.0",
+    "node-pre-gyp": "^0.6.33",
     "npm-shrinkwrap": "^200.5.1",
     "parse": "~1.8.0",
     "parse-dashboard": "^1.0.15",
