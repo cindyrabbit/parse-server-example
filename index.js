@@ -14,16 +14,14 @@ const configSettings = {
   'production': '/config/production.js'
 }
 
-process.env.NODE_ENV = 'dev'
+process.env.NODE_ENV = 'production'
 
 console.log(util.format('process.env.WEBSITE_SITE_NAME is %s', process.env.WEBSITE_SITE_NAME))
 
 // Determine environment by checking Website_site_name which is a default setting on Azure web app
-if (process.env.WEBSITE_SITE_NAME == 'nextbride-parse') {
-  process.env.NODE_ENV = 'dogfood'
-} else if (process.env.WEBSITE_SITE_NAME == 'nextbride-parse') {
-  process.env.NODE_ENV = 'production' // default value is 'dev'
-}
+/* if (process.env.WEBSITE_SITE_NAME == 'nextbride-parse') {
+  process.env.NODE_ENV = 'production'
+} */
 
 module.exports = {
   'configSettings': configSettings
