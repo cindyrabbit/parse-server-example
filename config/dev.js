@@ -1,25 +1,25 @@
 var fs = require('fs'),
-	appRoot = require('app-root-path'),
-	dev = require('./dev.js'),
-	util = require('util'),
-	_GridStoreAdapter = require(appRoot + '/node_modules/parse-server/lib/Adapters/Files/GridStoreAdapter.js');
+  appRoot = require('app-root-path'),
+  dev = require('./dev.js'),
+  util = require('util'),
+  _GridStoreAdapter = require(appRoot + '/node_modules/parse-server/lib/Adapters/Files/GridStoreAdapter.js')
 
 // serverUrl should not contain surfix like /parse
 // Don't forget to change to https if needed
-var serverUrl = process.env.SERVER_URL || 'http://localhost:1338/parse';
+var serverUrl = process.env.SERVER_URL || 'http://localhost:1338/parse'
 
 // Client-keys like the javascript key or the .NET key are not necessary with parse-server
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
-var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey';
-var databaseURI = process.env.DATABASE_URI || 'mongodb://chris:870807@localhost:27017/dev';
-var emailDir = appRoot + '/views/emailTemplates';
-var verificationBody = fs.readFileSync(emailDir + '/confirmEmail.ejs', 'utf8');
-var passwordResetBody = fs.readFileSync(emailDir + '/resetPassword.ejs', 'utf8');
+var javascriptKey = process.env.JAVASCRIPT_KEY || 'myJavascriptKey'
+var databaseURI = process.env.DATABASE_URI || 'mongodb://cindy:01062016@localhost:27017/dev'
+var emailDir = appRoot + '/views/emailTemplates'
+var verificationBody = fs.readFileSync(emailDir + '/confirmEmail.ejs', 'utf8')
+var passwordResetBody = fs.readFileSync(emailDir + '/resetPassword.ejs', 'utf8')
 
-var domain_url = 'http://www.lvhunba.com';
+var domain_url = 'http://www.lvhunba.com'
 
-//appId, masterKey, databaseURI, serverURI, cloud and logFolder are defined in parse-server-azure-config package reading from machine Environment or default value. 
+// appId, masterKey, databaseURI, serverURI, cloud and logFolder are defined in parse-server-azure-config package reading from machine Environment or default value.
 
 module.exports = {
   server: {
@@ -34,7 +34,7 @@ module.exports = {
 	  allowClientClassCreation: false,
 	  enableAnonymousUsers: false,
 	  databaseURI: databaseURI,
-	  filesAdapter: () => { return new _GridStoreAdapter.GridStoreAdapter(databaseURI)},
+	  filesAdapter: () => { return new _GridStoreAdapter.GridStoreAdapter(databaseURI) },
 	  verifyUserEmails: true,
 	  emailAdapter: {
 	    module: 'parse-server-mandrill-adapter',
@@ -56,7 +56,7 @@ module.exports = {
 	      verificationSubject: '*|appname|* - 请确认您的邮箱',
 	      // Verification email body
 	      // verificationBody: fs.readFileSync(emailDir + '/confirmEmail.ejs', 'utf8'),
-	       //verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
+	       // verificationBody: 'Hi,\n\nYou are being asked to confirm the e-mail address *|email|* with *|appname|*\n\nClick here to confirm it:\n*|link|*',
 	       verificationBody: verificationBody,
 	      // Password reset email subject
 	      passwordResetSubject: '*|appname|* - 密码重置',
@@ -71,7 +71,7 @@ module.exports = {
 	    // passwordResetSuccess: 'http://yourpage/sucess.html'
 	  },
 	  liveQuery: {
-	    classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
+	    classNames: ['Posts', 'Comments'] // List of classes to support for query subscriptions
 	  }
   },
   dashboard: {},
@@ -81,27 +81,20 @@ module.exports = {
 
 // Overwrite default inspect function of emailAdapter due to long output of verficationBody
 // TODO: we can refine this method to output everything but verificationBody
-module.exports.server.emailAdapter.options.inspect = function(depth) {
+module.exports.server.emailAdapter.options.inspect = function (depth) {
+  var output = '{\r\n'
 
-	var output = "{\r\n";
+  for (var key in this)	{
+    if (key == 'verificationBody' || key == 'passwordResetBody')		{
+      output = output.concat(util.format('  %s: length - %s, \r\n', key, this[key].length))
+    } else if (key == 'inspect') 		{
+      continue
+    } else		{
+      output = output.concat(util.format('  %s: %s, \r\n', key, this[key]))
+    }
+  }
 
-	for( var key in this)
-	{
-		if(key == 'verificationBody' || key == 'passwordResetBody')
-		{
-			output = output.concat(util.format("  %s: length - %s, \r\n",key, this[key].length ));
-		}
-		else if (key =='inspect') 
-		{
-			continue;
-		}
-		else
-		{
-			output = output.concat(util.format("  %s: %s, \r\n", key, this[key]));
-		}
-	}
+  output = output.concat('}\r\n')
 
-	output = output.concat("}\r\n");
-
-	return output;
-};
+  return output
+}
